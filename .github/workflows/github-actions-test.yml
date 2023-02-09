@@ -1,0 +1,45 @@
+# workflow 이름
+name: Github Actions Test
+
+# workflow를 동작하게 하는 trigger (push 이벤트 발생할때마다 실행)
+on: push
+
+# job step 이라는 일련의 과정을 통해서 실행
+jobs:
+  test:
+    # Job 이름
+    name: Test Job
+    # 해당 Job을 어떤 OS에서 실행할것인지
+    runs-on: ubuntu-latest
+
+    # Job이 가질 수 있는 동작의 나열, 각각의 step은 독립적인 프로시스를 가짐
+    steps:
+      # Github Actions는 해당 프로젝트를 리눅스 환경에 체크아웃 하고 나서 실행함 
+      # 만들어 놓은 Action을 사용할 때는 uses라는 키워드 사용
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+      
+      # 해당환경을 Node.js에서 실행하겠다고 명시
+      - name: Use Node.js
+        use: actions/stepup-node@v2
+        # with: Action에 값 전달하는 역할
+        # github에 저장한 secrets 값을 가져옴
+        with:
+          node-version: ${{ secrets.NODE_VERSION }}
+
+      # push 할때마다 npm install 하지 않기 위해서 작성
+      # 해당 프로젝트의 node_modules가 변했는지 안변했는지를 이용해서 모듈 변화가 있을때만 npm install 해줌
+      - name: Cache node modules
+        uses: actions/cache@v2
+        # 해당 step을 대표하는 id
+        id: cache
+        with:
+          # node_modules 라는 폴더를 검사하여
+          path: node_modules
+          # 아래 키값으로 cache가 되어있는지를 확인
+          key: npm-packages-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependencies
+        # 모듈에 변동사항이 있으면 npm install 실행하고 아니면 해당 스텝을 건너뜀
+        if: steps.cache.outputs.cache-hit != true
+        run: npm install
