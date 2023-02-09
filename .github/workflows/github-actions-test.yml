@@ -43,3 +43,10 @@ jobs:
         # 모듈에 변동사항이 있으면 npm install 실행하고 아니면 해당 스텝을 건너뜀
         if: steps.cache.outputs.cache-hit != true
         run: npm install
+
+      - name: 현재 위치 조회 (Run pwd)
+        run: pwd
+      
+      - name: 파일 목록 조회 (Run ls -al)
+        run: ls -al
+
