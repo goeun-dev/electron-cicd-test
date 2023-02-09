@@ -21,7 +21,7 @@ jobs:
       
       # 해당환경을 Node.js에서 실행하겠다고 명시
       - name: Use Node.js
-        uses: actions/stepup-node@v2
+        uses: actions/setup-node@v2
         # with: Action에 값 전달하는 역할
         # github에 저장한 secrets 값을 가져옴
         with:
