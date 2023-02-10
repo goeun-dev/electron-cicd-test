@@ -17,6 +17,8 @@ jobs:
       # Github Actions는 해당 프로젝트를 리눅스 환경에 체크아웃 하고 나서 실행함 
       # 만들어 놓은 Action을 사용할 때는 uses라는 키워드 사용
       - name: Checkout Source Code
+        # 저장소 clone 후 checkout 하여 다음 명령어에서 사용할 수 있게 함
+        # 저장소에 있는 소스코드를 가상머신에 올림
         uses: actions/checkout@v2
       
       # 해당환경을 Node.js에서 실행하겠다고 명시
